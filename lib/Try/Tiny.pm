@@ -1,10 +1,14 @@
 package Try::Tiny;
 
 use strict;
-use warnings;
+#use warnings;
 
-use base qw(Exporter);
-use vars qw(@EXPORT @EXPORT_OK $VERSION);
+use vars qw(@EXPORT @EXPORT_OK $VERSION @ISA);
+
+BEGIN {
+	require Exporter;
+	@ISA = qw(Exporter);
+}
 
 $VERSION = "0.01";
 
