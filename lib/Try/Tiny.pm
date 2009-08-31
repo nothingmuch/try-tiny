@@ -132,7 +132,7 @@ of error values (simple strings, references, objects, overloaded objects, etc).
 
 All are exported by default using L<Exporter>.
 
-In the future L<Sub::ExporteR> may be used to allow the keywords to be renamed,
+In the future L<Sub::Exporter> may be used to allow the keywords to be renamed,
 but this technically does not satisfy Adam Kennedy's definition of "Tiny".
 
 =over 4
@@ -143,7 +143,7 @@ Takes one mandatory and one optional catch subroutine.
 
 The mandatory subroutine is evaluated in the context of an C<eval> block.
 
-If no error occured the value from the first block is returned.
+If no error occurred the value from the first block is returned.
 
 If there was an error and the second subroutine was given it will be invoked
 with the error in C<$_> (localized) and as that block's first and only
@@ -153,7 +153,7 @@ Note that the error may be false
 
 =item catch &
 
-Just retuns the subroutine it was given.
+Just returns the subroutine it was given.
 
 	catch { ... }
 
@@ -172,7 +172,7 @@ There are a number of issues with C<eval>.
 =head2 Clobbering $@
 
 When you run an eval block and it succeeds, C<$@> will be cleared, potentially
-cloberring an error that is currently being caught.
+clobbering an error that is currently being caught.
 
 C<$@> must be properly localized before invoking C<eval> in order to avoid this issue.
 
