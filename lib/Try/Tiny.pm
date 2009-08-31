@@ -291,6 +291,10 @@ destructors. It is guaranteed that C<catch> will be called, though.
 Much more feature complete, more convenient semantics, but at the cost of
 implementation complexity.
 
+=item L<Throwable>
+
+A lightweight role for rolling your own exception classes.
+
 =item L<Error>
 
 Exception object implementation with a C<try> statement. Does not localize
