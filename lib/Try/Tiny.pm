@@ -65,9 +65,12 @@ sub try (&;$) {
 			for ($error) {
 				return $catch->($error);
 			}
-		} else {
-			return;
+
+			# in case when() was used without an explicit return, the C<for>
+			# loop will be aborted and there's no useful return value
 		}
+
+		return;
 	} else {
 		# no failure, $@ is back to what it was, everything is fine
 		return $wantarray ? @ret : $ret[0];
