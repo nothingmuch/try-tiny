@@ -250,7 +250,7 @@ Using Perl 5.10 you can enable the C<given>/C<when> construct. The C<catch>
 block is invoked in a topicalizer context (like a C<given> block).
 
 Note that you can't return a useful value from C<catch> using the C<when>
-blocks.
+blocks without an explicit C<return>.
 
 This is somewhat similar to Perl 6's C<CATCH> blocks. You can use it to
 concisely match errors:
