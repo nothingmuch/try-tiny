@@ -316,9 +316,9 @@ Yuval Kogman E<lt>nothingmuch@woobling.orgE<gt>
 
 =head1 COPYRIGHT
 
-    Copyright (c) 2009 Yuval Kogman. All rights reserved.
+	Copyright (c) 2009 Yuval Kogman. All rights reserved.
 	This program is free software; you can redistribute
-    it and/or modify it under the terms of the MIT license.
+	it and/or modify it under the terms of the MIT license.
 
 =cut
 
