@@ -247,7 +247,7 @@ can at least be sure there was an error:
 This is because an C<eval> that caught a C<die> will always behave like
 C<return> with no arguments.
 
-=head1 SHINY SUGAR
+=head1 SHINY SYNTAX
 
 Using Perl 5.10 you can enable the C<given>/C<when> construct. The C<catch>
 block is invoked in a topicalizer context (like a C<given> block).
