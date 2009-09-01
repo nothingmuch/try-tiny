@@ -39,10 +39,6 @@ sub throws_ok (&$$) {
 }
 
 
-sub Evil::DESTROY {
-	eval { "oh noes" };
-}
-
 lives_ok {
 	try {
 		die "foo";
@@ -79,12 +75,18 @@ is_deeply( [ try {qw(foo bar gorch)} ], [qw(foo bar gorch)], "list context" );
 
 
 
+sub Evil::DESTROY {
+	eval { "oh noes" };
+}
+
+sub Evil::new { bless { }, $_[0] }
+
 {
 	local $@ = "magic";
 	local $_ = "other magic";
 
 	try {
-		my $object = bless { }, "Evil";
+		my $object = Evil->new;
 		die "foo";
 	} catch {
 		pass("catch invoked");

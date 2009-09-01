@@ -109,18 +109,16 @@ Try::Tiny - minimal try/catch with proper localization of $@
 =head1 DESCRIPTION
 
 This module provides bare bones C<try>/C<catch> statements that are designed to
-minimize common mistakes done with eval blocks (for instance assuming that
-C<$@> is set to a true value on error, or clobbering previous values of C<$@>),
-and NOTHING else.
+minimize common mistakes with eval blocks, and NOTHING else.
 
 This is unlike L<TryCatch> which provides a nice syntax and avoids adding
 another call stack layer, and supports calling C<return> from the try block to
 return from the parent subroutine. These extra features come at a cost of a few
 dependencies, namely L<Devel::Declare> and L<Scope::Upper> which are
-occasionally problematic, and the additional catch filtering using L<Moose>
-type constraints may not be desirable either.
+occasionally problematic, and the additional catch filtering uses L<Moose>
+type constraints which may not be desirable either.
 
-The main focus of this module is to provide reliable but simple error handling
+The main focus of this module is to provide simple and reliable error handling
 for those having a hard time installing L<TryCatch>, but who still want to
 write correct C<eval> blocks without 5 lines of boilerplate each time.
 
@@ -130,28 +128,32 @@ of error values (simple strings, references, objects, overloaded objects, etc).
 
 =head1 EXPORTS
 
-All are exported by default using L<Exporter>.
+All functions are exported by default using L<Exporter>.
 
 In the future L<Sub::Exporter> may be used to allow the keywords to be renamed,
 but this technically does not satisfy Adam Kennedy's definition of "Tiny".
 
 =over 4
 
-=item try &;$
+=item try (&;$)
 
-Takes one mandatory and one optional catch subroutine.
+Takes one mandatory try subroutine and one optional catch subroutine.
 
 The mandatory subroutine is evaluated in the context of an C<eval> block.
 
-If no error occurred the value from the first block is returned.
+If no error occurred the value from the first block is returned, preserving
+list/scalar context.
 
 If there was an error and the second subroutine was given it will be invoked
 with the error in C<$_> (localized) and as that block's first and only
 argument.
 
-Note that the error may be false 
+Note that the error may be false, but if that happens the C<catch> block will
+still be invoked..
 
-=item catch &
+=item catch (&)
+
+Intended to be used in the second argument position of C<try>.
 
 Just returns the subroutine it was given.
 
@@ -160,8 +162,6 @@ Just returns the subroutine it was given.
 is the same as
 
 	sub { ... }
-
-Intended to be used in the second argument position of C<try>.
 
 =back
 
@@ -174,7 +174,11 @@ There are a number of issues with C<eval>.
 When you run an eval block and it succeeds, C<$@> will be cleared, potentially
 clobbering an error that is currently being caught.
 
-C<$@> must be properly localized before invoking C<eval> in order to avoid this issue.
+This causes action at a distance, clearing previous errors your caller may have
+not yet handled.
+
+C<$@> must be properly localized before invoking C<eval> in order to avoid this
+issue.
 
 =head2 Localizing $@ silently masks errors
 
@@ -186,7 +190,7 @@ Inside an eval block C<die> behaves sort of like:
 	}
 
 This means that if you were polite and localized C<$@> you can't die in that
-scope while propagating your error.
+scope, or your error will be discarded (printing "Something's wrong" instead).
 
 The workaround is very ugly:
 
@@ -207,9 +211,10 @@ This code is wrong:
 		...
 	}
 
-because due to the previous caveats it may have been unset. $@ could also an
-overloaded error object that evaluates to false, but that's asking for trouble
-anyway.
+because due to the previous caveats it may have been unset.
+
+C<$@> could also an overloaded error object that evaluates to false, but that's
+asking for trouble anyway.
 
 The classic failure mode is:
 
@@ -227,16 +232,16 @@ The classic failure mode is:
 
 	}
 
-In this case since C<Object::DESTROY> is not localizing C<$@> but using eval it
-will set C<$@> to C<"">.
+In this case since C<Object::DESTROY> is not localizing C<$@> but still uses
+C<eval> it will set C<$@> to C<"">.
 
-The destructor is only fired after C<die> sets C<$@> to
+The destructor is called when the stack is unwound, after C<die> sets C<$@> to
 C<"foo at Foo.pm line 42\n">, so by the time C<if ( $@ )> is evaluated it has
-become false.
+been cleared by C<eval> in the destructor.
 
-The workaround for this is even uglier. Even though we can't save the value of
-C<$@> from code that doesn't localize it but uses C<eval> in destructors, we
-can at least be sure there was an error:
+The workaround for this is even uglier than the previous ones. Even though we
+can't save the value of C<$@> from code that doesn't localize, we can at least
+be sure the eval was aborted due to an error:
 
 	my $failed = not eval {
 		...
@@ -244,15 +249,15 @@ can at least be sure there was an error:
 		return 1;
 	};
 
-This is because an C<eval> that caught a C<die> will always behave like
-C<return> with no arguments.
+This is because an C<eval> that caught a C<die> will always return a false
+value.
 
 =head1 SHINY SYNTAX
 
-Using Perl 5.10 you can enable the C<given>/C<when> construct. The C<catch>
-block is invoked in a topicalizer context (like a C<given> block).
+Using Perl 5.10 you can use L<perlsyn/"Switch statements">.
 
-Note that you can't return a useful value from C<catch> using the C<when>
+The C<catch> block is invoked in a topicalizer context (like a C<given> block),
+but note that you can't return a useful value from C<catch> using the C<when>
 blocks without an explicit C<return>.
 
 This is somewhat similar to Perl 6's C<CATCH> blocks. You can use it to
@@ -261,7 +266,7 @@ concisely match errors:
 	try {
 		require Foo;
 	} catch {
-		when (qr/^Can't locate .*?\.pm in \@INC/) { } # ignore
+		when (/^Can't locate .*?\.pm in \@INC/) { } # ignore
 		default { die $_ }
 	}
 
@@ -271,14 +276,15 @@ concisely match errors:
 
 =item *
 
-Introduces another caller stack frame. L<Sub::Uplevel> is not used. L<Carp>
-will report this when using full stack traces. This is considered a feature.
+C<try> introduces another caller stack frame. L<Sub::Uplevel> is not used. L<Carp>
+will report this when using full stack traces. This lack of magic is considered
+a feature.
 
 =item *
 
 The value of C<$_> in the C<catch> block is not guaranteed to be preserved,
 there is no safe way to ensure this if C<eval> is used unhygenically in
-destructors. It is guaranteed that C<catch> will be called, though.
+destructors. It's only guaranteeed that the C<catch> will be called.
 
 =back
 
