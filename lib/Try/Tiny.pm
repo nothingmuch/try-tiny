@@ -268,7 +268,7 @@ concisely match errors:
 	} catch {
 		when (/^Can't locate .*?\.pm in \@INC/) { } # ignore
 		default { die $_ }
-	}
+	};
 
 =head1 CAVEATS
 
