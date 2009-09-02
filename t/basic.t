@@ -70,7 +70,7 @@ throws_ok {
 	is( $@, "magic", '$@ untouched' );
 }
 
-is( scalar(try { qw(foo bar gorch) }), "gorch", "scalar context" ); 
+is( scalar(try { "foo", "bar", "gorch" }), "gorch", "scalar context" );
 is_deeply( [ try {qw(foo bar gorch)} ], [qw(foo bar gorch)], "list context" );
 
 
