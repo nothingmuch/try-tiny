@@ -297,6 +297,11 @@ destructors. It's only guaranteeed that the C<catch> will be called.
 Much more feature complete, more convenient semantics, but at the cost of
 implementation complexity.
 
+=item L<autodie>
+
+Automatic error throwing for builtin functions and more. Also designed to
+work well with C<given>/C<when>.
+
 =item L<Throwable>
 
 A lightweight role for rolling your own exception classes.
