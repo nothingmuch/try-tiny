@@ -2,6 +2,7 @@
 	- Doc fixes from chromatic
 	- Various minor fixes from Adam Kennedy
 	- Additional documentation and code clarifications
+	- 5.005_04 compatibility
 
 0.01
 	- Initial release
