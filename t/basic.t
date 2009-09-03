@@ -3,7 +3,7 @@
 use strict;
 #use warnings;
 
-use Test::More tests => 15;
+use Test::More tests => 19;
 
 BEGIN { use_ok 'Try::Tiny' };
 
@@ -73,6 +73,34 @@ throws_ok {
 is( scalar(try { "foo", "bar", "gorch" }), "gorch", "scalar context" );
 is_deeply( [ try {qw(foo bar gorch)} ], [qw(foo bar gorch)], "list context" );
 
+
+lives_ok {
+	try {
+		die "foo";
+	} catch {
+		my $err = shift;
+
+		try {
+			like $err, qr/foo/;
+		} catch {
+			fail("shouldn't happen");
+		};
+
+		pass "got here";
+	}
+} "try in try catch block";
+
+throws_ok {
+	try {
+		die "foo";
+	} catch {
+		my $err = shift;
+
+		try { } catch { };
+
+		die "rethrowing $err";
+	}
+} qr/rethrowing foo/, "rethrow with try in catch block";
 
 
 sub Evil::DESTROY {
