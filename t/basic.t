@@ -3,7 +3,7 @@
 use strict;
 #use warnings;
 
-use Test::More tests => 21;
+use Test::More tests => 22;
 
 BEGIN { use_ok 'Try::Tiny' };
 
@@ -129,7 +129,7 @@ sub Evil::new { bless { }, $_[0] }
 }
 
 {
-	my $caught;
+	my ( $caught, $prev );
 
 	{
 		local $@;
@@ -144,8 +144,10 @@ sub Evil::new { bless { }, $_[0] }
 			}
 		} catch {
 			$caught = $_;
+			$prev = $@;
 		}
 	}
 
 	is_deeply( $caught, { prev => "bar\n" }, 'previous value of $@ available for capture' );
+	is( $prev, "bar\n", 'previous value of $@ also available in catch block' );
 }

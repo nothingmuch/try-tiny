@@ -167,6 +167,10 @@ is the same as
 
 	sub { ... }
 
+Inside the catch block the previous value of C<$@> is still available for use.
+This value may or may not be meaningful depending on what happenned before the
+C<try>, but it might be a good idea to preserve it in an error stack.
+
 =back
 
 =head1 BACKGROUND
