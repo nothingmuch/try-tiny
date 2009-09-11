@@ -3,7 +3,7 @@
 use strict;
 #use warnings;
 
-use Test::More tests => 19;
+use Test::More tests => 21;
 
 BEGIN { use_ok 'Try::Tiny' };
 
@@ -38,6 +38,8 @@ sub throws_ok (&$$) {
 	}
 }
 
+
+my $prev;
 
 lives_ok {
 	try {
@@ -124,4 +126,26 @@ sub Evil::new { bless { }, $_[0] }
 
 	is( $@, "magic", '$@ untouched' );
 	is( $_, "other magic", '$_ untouched' );
+}
+
+{
+	my $caught;
+
+	{
+		local $@;
+
+		eval { die "bar\n" };
+
+		is( $@, "bar\n", 'previous value of $@' );
+
+		try {
+			die {
+				prev => $@,
+			}
+		} catch {
+			$caught = $_;
+		}
+	}
+
+	is_deeply( $caught, { prev => "bar\n" }, 'previous value of $@ available for capture' );
 }

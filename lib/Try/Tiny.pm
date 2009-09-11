@@ -23,6 +23,9 @@ sub try (&;$) {
 	# to $failed
 	my $wantarray = wantarray;
 
+	# save the value of $@ so we can set $@ back to it in the begining of the eval
+	my $prev_error = $@;
+
 	my ( @ret, $error, $failed );
 
 	# FIXME consider using local $SIG{__DIE__} to accumilate all errors. It's
@@ -37,6 +40,7 @@ sub try (&;$) {
 		# failed will be true if the eval dies, because 1 will not be returned
 		# from the eval body
 		$failed = not eval {
+			$@ = $prev_error;
 
 			# evaluate the try block in the correct context
 			if ( $wantarray ) {
@@ -179,6 +183,13 @@ not yet handled.
 
 C<$@> must be properly localized before invoking C<eval> in order to avoid this
 issue.
+
+More specifically, C<$@> is clobbered at the begining of the C<eval>, which
+also makes it impossible to capture the previous error before you die (for
+instance when making exception objects with error stacks).
+
+For this reason C<try> will actually set C<$@> to its previous value (before
+the localization) in the begining of the C<eval> block.
 
 =head2 Localizing $@ silently masks errors
 
