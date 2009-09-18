@@ -200,7 +200,7 @@ the localization) in the begining of the C<eval> block.
 Inside an eval block C<die> behaves sort of like:
 
 	sub die {
-		$@_ = $_[0];
+		$@ = $_[0];
 		return_undef_from_eval();
 	}
 
