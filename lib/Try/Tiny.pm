@@ -336,6 +336,17 @@ issues with C<$@> but you still need to localize to prevent clobbering.
 
 =back
 
+=head1 LIGHTNING TALK
+
+I gave a lightning talk about this module, you can see the slides (Firefox
+only):
+
+L<http://nothingmuch.woobling.org/talks/takahashi.xul?data=try_tiny.txt>
+
+Or read the source:
+
+L<http://nothingmuch.woobling.org/talks/yapc_asia_2009/try_tiny.yml>
+
 =head1 VERSION CONTROL
 
 L<http://github.com/nothingmuch/try-tiny/>

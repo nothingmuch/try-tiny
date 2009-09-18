@@ -1,3 +1,8 @@
+0.03
+	- More documentation and tests
+	- Sets $@ to the previous value at the beginning of the eval, to allow
+	  the capture of an error stack when calling die.
+
 0.02
 	- Doc fixes from chromatic
 	- Various minor fixes from Adam Kennedy
