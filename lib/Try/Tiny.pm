@@ -23,12 +23,12 @@ sub try (&;$) {
 	# to $failed
 	my $wantarray = wantarray;
 
-	# save the value of $@ so we can set $@ back to it in the begining of the eval
+	# save the value of $@ so we can set $@ back to it in the beginning of the eval
 	my $prev_error = $@;
 
 	my ( @ret, $error, $failed );
 
-	# FIXME consider using local $SIG{__DIE__} to accumilate all errors. It's
+	# FIXME consider using local $SIG{__DIE__} to accumulate all errors. It's
 	# not perfect, but we could provide a list of additional errors for
 	# $catch->();
 
@@ -54,13 +54,13 @@ sub try (&;$) {
 			return 1; # properly set $fail to false
 		};
 
-		# copy $@ to $error, when we leave this scope local $@ will revert $@
+		# copy $@ to $error; when we leave this scope, local $@ will revert $@
 		# back to its previous value
 		$error = $@;
 	}
 
-	# at this point $failed contains a true value if the eval died even if some
-	# destructor overwrite $@ as the eval was unwinding.
+	# at this point $failed contains a true value if the eval died, even if some
+	# destructor overwrote $@ as the eval was unwinding.
 	if ( $failed ) {
 		# if we got an error, invoke the catch block.
 		if ( $catch ) {
@@ -153,7 +153,7 @@ with the error in C<$_> (localized) and as that block's first and only
 argument.
 
 Note that the error may be false, but if that happens the C<catch> block will
-still be invoked..
+still be invoked.
 
 =item catch (&)
 
@@ -168,7 +168,7 @@ is the same as
 	sub { ... }
 
 Inside the catch block the previous value of C<$@> is still available for use.
-This value may or may not be meaningful depending on what happenned before the
+This value may or may not be meaningful depending on what happened before the
 C<try>, but it might be a good idea to preserve it in an error stack.
 
 =back
@@ -193,7 +193,7 @@ also makes it impossible to capture the previous error before you die (for
 instance when making exception objects with error stacks).
 
 For this reason C<try> will actually set C<$@> to its previous value (before
-the localization) in the begining of the C<eval> block.
+the localization) in the beginning of the C<eval> block.
 
 =head2 Localizing $@ silently masks errors
 
@@ -228,8 +228,8 @@ This code is wrong:
 
 because due to the previous caveats it may have been unset.
 
-C<$@> could also an overloaded error object that evaluates to false, but that's
-asking for trouble anyway.
+C<$@> could also be an overloaded error object that evaluates to false, but
+that's asking for trouble anyway.
 
 The classic failure mode is:
 
@@ -248,7 +248,7 @@ The classic failure mode is:
 	}
 
 In this case since C<Object::DESTROY> is not localizing C<$@> but still uses
-C<eval> it will set C<$@> to C<"">.
+C<eval>, it will set C<$@> to C<"">.
 
 The destructor is called when the stack is unwound, after C<die> sets C<$@> to
 C<"foo at Foo.pm line 42\n">, so by the time C<if ( $@ )> is evaluated it has
@@ -299,7 +299,7 @@ a feature.
 
 The value of C<$_> in the C<catch> block is not guaranteed to be preserved,
 there is no safe way to ensure this if C<eval> is used unhygenically in
-destructors. It's only guaranteeed that the C<catch> will be called.
+destructors. It's only guaranteed that the C<catch> will be called.
 
 =back
 
@@ -332,7 +332,7 @@ Provides a C<catch> statement, but properly calling C<eval> is your
 responsibility.
 
 The C<try> keyword pushes C<$@> onto an error stack, avoiding some of the
-issues with C<$@> but you still need to localize to prevent clobbering.
+issues with C<$@>, but you still need to localize to prevent clobbering.
 
 =back
 
