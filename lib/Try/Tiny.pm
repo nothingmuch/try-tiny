@@ -134,8 +134,8 @@ of error values (simple strings, references, objects, overloaded objects, etc).
 
 All functions are exported by default using L<Exporter>.
 
-In the future L<Sub::Exporter> may be used to allow the keywords to be renamed,
-but this technically does not satisfy Adam Kennedy's definition of "Tiny".
+If you need to rename the C<try> or C<catch> keyword consider using
+L<Sub::Import> to get L<Sub::Exporter>'s flexibility.
 
 =over 4
 
