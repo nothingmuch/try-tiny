@@ -291,6 +291,27 @@ concisely match errors:
 
 =item *
 
+C<@_> is not available, you need to name your args:
+
+	sub foo {
+		my ( $self, @args ) = @_;
+		try { $self->bar(@args) }
+	}
+
+=item *
+
+C<return> returns from the C<try> block, not from the parent sub (note that
+this is also how C<eval> works, but not how L<TryCatch> works):
+
+	sub bar {
+		try { return "foo" };
+		return "baz";
+	}
+
+	say bar(); # "baz"
+
+=item *
+
 C<try> introduces another caller stack frame. L<Sub::Uplevel> is not used. L<Carp>
 will report this when using full stack traces. This lack of magic is considered
 a feature.
