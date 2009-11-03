@@ -16,6 +16,8 @@ $VERSION = eval $VERSION;
 
 @EXPORT = @EXPORT_OK = qw(try catch);
 
+$Carp::Internal{+__PACKAGE__}++;
+
 sub try (&;$) {
 	my ( $try, $catch ) = @_;
 
