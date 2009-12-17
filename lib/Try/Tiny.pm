@@ -132,6 +132,15 @@ It's designed to work as correctly as possible in light of the various
 pathological edge cases (see L<BACKGROUND>) and to be compatible with any style
 of error values (simple strings, references, objects, overloaded objects, etc).
 
+If the try block dies, it returns the value of the last statement executed in
+the catch block, if there is one.  Otherwise, it returns C<undef> in scalar
+context or the empty list in list context. The following two examples both
+assign C<"bar"> to C<$x>.
+
+	my $x = try { die "foo" } catch { "bar" };
+
+	my $x = eval { die "foo" } || "bar";
+
 =head1 EXPORTS
 
 All functions are exported by default using L<Exporter>.
@@ -323,6 +332,22 @@ a feature.
 The value of C<$_> in the C<catch> block is not guaranteed to be preserved,
 there is no safe way to ensure this if C<eval> is used unhygenically in
 destructors. It's only guaranteed that the C<catch> will be called.
+
+=item *
+
+The return value of the C<catch> block is not ignored, so if testing the result
+of the expression for truth on success, be sure to return a false value from
+the C<catch> block:
+
+	my $obj = try {
+		MightFail->new;
+	} catch {
+		...
+
+		return; # avoid returning a true value;
+	};
+
+	return unless $obj;
 
 =back
 
