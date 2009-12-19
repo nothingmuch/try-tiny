@@ -482,7 +482,7 @@ issues with C<$@>, but you still need to localize to prevent clobbering.
 I gave a lightning talk about this module, you can see the slides (Firefox
 only):
 
-L<http://nothingmuch.woobling.org/talks/takahashi.xul?data=try_tiny.txt>
+L<http://nothingmuch.woobling.org/talks/takahashi.xul?data=yapc_asia_2009/try_tiny.txt>
 
 Or read the source:
 
