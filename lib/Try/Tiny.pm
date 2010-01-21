@@ -329,9 +329,10 @@ a feature.
 
 =item *
 
-The value of C<$_> in the C<catch> block is not guaranteed to be preserved,
-there is no safe way to ensure this if C<eval> is used unhygenically in
-destructors. It's only guaranteed that the C<catch> will be called.
+The value of C<$_> in the C<catch> block is not guaranteed to be the value of
+the exception thrown (C<$@>) in the C<try> block.  There is no safe way to
+ensure this, since C<eval> may be used unhygenically in destructors.  The only
+guarantee is that the C<catch> will be called if an exception is thrown.
 
 =item *
 
