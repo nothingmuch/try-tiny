@@ -10,7 +10,7 @@ BEGIN {
 	@ISA = qw(Exporter);
 }
 
-$VERSION = "0.02";
+$VERSION = "0.03";
 
 $VERSION = eval $VERSION;
 
