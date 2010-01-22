@@ -84,6 +84,9 @@ sub try (&;@) {
 		$error = $@;
 	}
 
+	# set up a scope guard to invoke the finally block at the end
+	my $guard = $finally && bless \$finally, "Try::Tiny::ScopeGuard";
+
 	# at this point $failed contains a true value if the eval died, even if some
 	# destructor overwrote $@ as the eval was unwinding.
 	if ( $failed ) {
@@ -92,13 +95,7 @@ sub try (&;@) {
 			# This works like given($error), but is backwards compatible and
 			# sets $_ in the dynamic scope for the body of C<$catch>
 			for ($error) {
-				my $catch_return = $catch->($error);
-
-				# Finally blocks run after all other blocks so it is executed here
-				$finally->() if ( $finally );
-
-				#And return whatever catch returned
-				return $catch_return;
+				return $catch->($error);
 			}
 
 			# in case when() was used without an explicit return, the C<for>
@@ -107,9 +104,6 @@ sub try (&;@) {
 
 		return;
 	} else {
-		# Execute finally block once we decided we worked
-		$finally->() if ( $finally );
-
 		# no failure, $@ is back to what it was, everything is fine
 		return $wantarray ? @ret : $ret[0];
 	}
@@ -131,6 +125,11 @@ sub finally (&;@) {
 		bless(\$block, 'Try::Tiny::Finally'),
 		@rest,
 	);
+}
+
+sub Try::Tiny::ScopeGuard::DESTROY {
+	my $self = shift;
+	$$self->();
 }
 
 __PACKAGE__

@@ -3,7 +3,7 @@
 use strict;
 #use warnings;
 
-use Test::More tests => 24;
+use Test::More tests => 26;
 
 BEGIN { use_ok 'Try::Tiny' };
 
@@ -72,8 +72,12 @@ throws_ok {
 	is( $@, "magic", '$@ untouched' );
 }
 
-is( scalar(try { "foo", "bar", "gorch" }), "gorch", "scalar context" );
-is_deeply( [ try {qw(foo bar gorch)} ], [qw(foo bar gorch)], "list context" );
+is( scalar(try { "foo", "bar", "gorch" }), "gorch", "scalar context try" );
+is_deeply( [ try {qw(foo bar gorch)} ], [qw(foo bar gorch)], "list context try" );
+
+is( scalar(try { die } catch { "foo", "bar", "gorch" }), "gorch", "scalar context catch" );
+is_deeply( [ try { die } catch {qw(foo bar gorch)} ], [qw(foo bar gorch)], "list context catch" );
+
 
 {
 	my ($sub) = catch { my $a = $_; };
