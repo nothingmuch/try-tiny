@@ -1,5 +1,6 @@
 0.03
-	- More documentation and tests
+	- Support for 'finally' blocks (Andy Yates)
+	- More documentation and tests (many people)
 	- Sets $@ to the previous value at the beginning of the eval, to allow
 	  the capture of an error stack when calling die.
 
