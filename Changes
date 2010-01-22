@@ -1,3 +1,7 @@
+0.04
+	- Restore list context propagation for catch blocks
+	- Fix a bug where finally blocks weren't always invoked
+
 0.03
 	- Support for 'finally' blocks (Andy Yates)
 	- More documentation and tests (many people)
