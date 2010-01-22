@@ -3,7 +3,7 @@
 use strict;
 #use warnings;
 
-use Test::More tests => 22;
+use Test::More tests => 24;
 
 BEGIN { use_ok 'Try::Tiny' };
 
@@ -75,6 +75,12 @@ throws_ok {
 is( scalar(try { "foo", "bar", "gorch" }), "gorch", "scalar context" );
 is_deeply( [ try {qw(foo bar gorch)} ], [qw(foo bar gorch)], "list context" );
 
+{
+	my ($sub) = catch { my $a = $_; };
+	is(ref($sub), 'Try::Tiny::Catch', 'Checking catch subroutine scalar reference is correctly blessed');
+	my ($sub) = finally { my $a = $_; };
+	is(ref($sub), 'Try::Tiny::Finally', 'Checking finally subroutine scalar reference is correctly blessed');
+}
 
 lives_ok {
 	try {
