@@ -282,7 +282,7 @@ not yet handled.
 C<$@> must be properly localized before invoking C<eval> in order to avoid this
 issue.
 
-More specifically, C<$@> is clobbered at the begining of the C<eval>, which
+More specifically, C<$@> is clobbered at the beginning of the C<eval>, which
 also makes it impossible to capture the previous error before you die (for
 instance when making exception objects with error stacks).
 
