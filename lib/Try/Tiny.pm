@@ -433,6 +433,15 @@ the C<catch> block:
 
 	return unless $obj;
 
+=item *
+
+C<$SIG{__DIE__}> is still in effect.
+
+Though it can be argued that C<$SIG{__DIE__}> should be disabled inside of
+C<eval> blocks, since it isn't people have grown to rely on it. Therefore in
+the interests of compatibility, C<try> does not disable C<$SIG{__DIE__}> for
+the scope of the error throwing code.
+
 =back
 
 =head1 SEE ALSO
