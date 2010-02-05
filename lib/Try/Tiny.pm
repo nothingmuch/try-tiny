@@ -236,6 +236,11 @@ Inside the catch block the previous value of C<$@> is still available for use.
 This value may or may not be meaningful depending on what happened before the
 C<try>, but it might be a good idea to preserve it in an error stack.
 
+For code that captures C<$@> when throwing new errors (i.e.
+L<Class::Throwable>), you'll need to do:
+
+	local $@ = $_;
+
 =item finally (&;$)
 
   try     { ... }
