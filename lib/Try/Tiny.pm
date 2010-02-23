@@ -148,7 +148,7 @@ Try::Tiny - minimal try/catch with proper localization of $@
 	try {
 		die "foo";
 	} catch {
-		warn "caught error: $_";
+		warn "caught error: $_"; # not $@
 	};
 
 	# just silence errors
@@ -217,6 +217,9 @@ If there was an error and the second subroutine was given it will be invoked
 with the error in C<$_> (localized) and as that block's first and only
 argument.
 
+C<$@> does B<not> contain the error. Inside the C<catch> block it has the same
+value it had before the C<try> block was executed.
+
 Note that the error may be false, but if that happens the C<catch> block will
 still be invoked.
 
@@ -232,9 +235,10 @@ with this code reference.
 
 	catch { ... }
 
-Inside the catch block the previous value of C<$@> is still available for use.
-This value may or may not be meaningful depending on what happened before the
-C<try>, but it might be a good idea to preserve it in an error stack.
+Inside the catch block the caught error is stored in C<$_>, while previous
+value of C<$@> is still available for use.  This value may or may not be
+meaningful depending on what happened before the C<try>, but it might be a good
+idea to preserve it in an error stack.
 
 For code that captures C<$@> when throwing new errors (i.e.
 L<Class::Throwable>), you'll need to do:
