@@ -447,6 +447,24 @@ C<eval> blocks, since it isn't people have grown to rely on it. Therefore in
 the interests of compatibility, C<try> does not disable C<$SIG{__DIE__}> for
 the scope of the error throwing code.
 
+=item *
+
+Lexical C<$_> may override the one set by C<catch>.
+
+For example Perl 5.10's C<given> form uses a lexical C<$_>, creating some
+confusing behavior:
+
+	given ($foo) {
+		when (...) {
+			try {
+				...
+			} catch {
+				warn $_; # will print $foo, not the error
+				warn $_[0]; # instead, get the error like this
+			}
+		}
+	}
+
 =back
 
 =head1 SEE ALSO
