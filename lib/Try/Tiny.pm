@@ -412,8 +412,8 @@ this is also how C<eval> works, but not how L<TryCatch> works):
 =item *
 
 C<try> introduces another caller stack frame. L<Sub::Uplevel> is not used. L<Carp>
-will report this when using full stack traces. This lack of magic is considered
-a feature.
+will not report this when using full stack traces, though, because
+C<%Carp::Internal> is used. This lack of magic is considered a feature.
 
 =item *
 
