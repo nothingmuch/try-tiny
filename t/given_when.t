@@ -7,9 +7,8 @@ use Test::More;
 
 BEGIN {
     plan skip_all => "Perl 5.10 is required" unless eval { require 5.010 };
+    use_ok("Try::Tiny");
 }
-
-use ok "Try::Tiny";
 
 my ( $error, $topic );
 
