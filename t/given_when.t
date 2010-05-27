@@ -7,6 +7,7 @@ use Test::More;
 
 BEGIN {
     plan skip_all => "Perl 5.10 is required" unless eval { require 5.010 };
+    plan tests => 3;
     use_ok("Try::Tiny");
 }
 
@@ -29,8 +30,6 @@ is( $error, "blah\n", "error caught" );
     local $TODO = "perhaps a workaround can be found";
     is( $topic, $error, 'error is also in $_' );
 }
-
-done_testing;
 
 # ex: set sw=4 et:
 
