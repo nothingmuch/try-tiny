@@ -1,3 +1,7 @@
+0.06
+	- in t/given_when.t use a plan instead of done_testing for more backwards
+	  compatibility
+
 0.05
 	- Documentation fixes and clarifications
 
