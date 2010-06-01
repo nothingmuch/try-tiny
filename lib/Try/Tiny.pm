@@ -394,11 +394,21 @@ concisely match errors:
 
 =item *
 
-C<@_> is not available, you need to name your args:
+C<@_> is not available within the C<try> block, so you need to copy your
+arglist. In case you want to work with argument values directly via C<@_>
+aliasing (i.e. allow C<$_[1] = "foo">), you need to pass C<@_> by reference:
 
 	sub foo {
 		my ( $self, @args ) = @_;
 		try { $self->bar(@args) }
+	}
+
+or
+
+	sub bar_in_place {
+		my $self = shift;
+		my $args = \@_;
+		try { $_ = $self->bar($_) for @$args }
 	}
 
 =item *
